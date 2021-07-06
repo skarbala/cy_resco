@@ -18,3 +18,8 @@ import './commands'
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+beforeEach(() => {
+    window.localStorage.setItem('bookingcom_extension_default', 'false')
+
+});
