@@ -3,7 +3,7 @@
 describe('Passenger picker', () => {
     beforeEach(() => {
         cy.setKiwiConsent()
-        cy.visit('https://www.kiwi.com/en')
+        cy.visit('/')
     });
     it('select max 9 adult passengers', () => {
         cy.get('[data-test="PassengersField"]')

@@ -1,17 +1,17 @@
 
 it('finds a flight from NYC to LAX', () => {
     cy.setKiwiConsent()
+    cy.setCookie('preferred_currency', 'EUR')
     window.localStorage.setItem('bookingcom_extension_default', 'false')
     cy.intercept('**SearchReturnItinerariesQuery**').as('search')
 
-    cy.visit('https://www.kiwi.com/en')
+    cy.visit('/')
     cy.get('[data-test="SearchPlaceField-origin"]')
         .find('[data-test="PlacePickerInputPlace"]')
         .first()
         .find('[data-test="PlacePickerInputPlace-close"]')
         .click()
     //zadam kam
-
     cy.get('[data-test=PlacePickerInput-origin] > [data-test=SearchField-input]')
         .type('New York')
     cy.get('[data-test="PlacepickerModalOpened-origin"]')

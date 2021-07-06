@@ -4,7 +4,7 @@
 describe('Place picker', () => {
     beforeEach(() => {
         cy.setKiwiConsent()
-        cy.visit('https://www.kiwi.com/en')
+        cy.visit('/')
     });
     it('origin place should be selected', () => {
         cy.get('[data-test=PlacePickerInputPlace]')
