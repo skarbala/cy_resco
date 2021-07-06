@@ -1,26 +1,24 @@
 /// <reference types="cypress" />
 
-import SearchPage from "../../../pages/searchPage";
 
 describe('Place picker', () => {
     beforeEach(() => {
+        cy.setKiwiConsent()
         cy.visit('https://www.kiwi.com/en')
-        cy.contains('button', 'Accept').click();
     });
     it('origin place should be selected', () => {
         cy.get('[data-test=PlacePickerInputPlace]')
             .should('be.visible')
             .should('not.be.empty')
     })
-    it.only('add next place to origin', () => {
+    it('add next place to origin', () => {
         cy.intercept('https://api.skypicker.com/umbrella/v2/**')
             .as('locations')
-
         cy.get('[data-test=PlacePickerInput-origin] > [data-test=SearchField-input]')
-            .type('Vienna')
+            .type('Milan')
         cy.wait('@locations')
         cy.get('[data-test="PlacepickerModalOpened-origin"]')
-            .contains('Vienna')
+            .contains('Milan')
             .click()
         cy.get('[data-test="SearchPlaceField-origin"]')
             .find('[data-test="PlacePickerInputPlace"]')
@@ -45,8 +43,8 @@ describe('Place picker', () => {
     it('display empty placepicker', () => {
         cy.intercept('https://api.skypicker.com/umbrella/v2/**', { statusCode: 500 })
             .as('locations')
-        new SearchPage()
-            .enterOrigin('Vienna')
+        cy.get('[data-test=PlacePickerInput-origin] > [data-test=SearchField-input]')
+            .type('Vienna')
         cy.wait('@locations')
         cy.get('[data-test="PlacepickerModalOpened-origin"]')
             .should('have.text', "Sorry, we're having some issues. Try reloading the page.")
