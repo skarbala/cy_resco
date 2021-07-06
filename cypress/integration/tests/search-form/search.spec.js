@@ -2,6 +2,8 @@
 it('finds a flight from NYC to LAX', () => {
     cy.setKiwiConsent()
     cy.setCookie('preferred_currency', 'EUR')
+    cy.intercept('https://api.skypicker.com/umbrella/v2/**')
+        .as('locations')
     window.localStorage.setItem('bookingcom_extension_default', 'false')
     cy.intercept('**SearchReturnItinerariesQuery**').as('search')
 
@@ -14,14 +16,17 @@ it('finds a flight from NYC to LAX', () => {
     //zadam kam
     cy.get('[data-test=PlacePickerInput-origin] > [data-test=SearchField-input]')
         .type('New York')
+    cy.wait('@locations')
     cy.get('[data-test="PlacepickerModalOpened-origin"]')
         .contains('New York')
         .click()
     cy.get('[data-test=PlacePickerInput-destination] > [data-test=SearchField-input]')
         .type('Los Angeles')
+    cy.wait('@locations')
     cy.get('[data-test="PlacepickerModalOpened-destination"]')
         .contains('Los Angeles')
         .click()
+
     cy.get('[data-test=LandingSearchButton]').click()
     cy.wait('@search')
     cy.get('[data-test="ResultCardWrapper"]')
