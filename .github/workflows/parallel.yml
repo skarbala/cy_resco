@@ -1,56 +1,29 @@
-name: Parallel Cypress
+name: Parallel Cypress Tests
 
 on: [workflow_dispatch]
 
 jobs:
-  install:
+  test:
+    name: Cypress run
     runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      # - name: Save build folder
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: build
-      #     if-no-files-found: error
-      #     path: build
-
-      - name: Cypress install
-        uses: cypress-io/github-action@v2
-        with:
-          # Disable running of tests within install job
-          runTests: false
-          # build: yarn build
-
-  ui-chrome-tests:
-    runs-on: ubuntu-latest
-    container: cypress/browsers:node12.18.3-chrome87-ff82
-    needs: install
     strategy:
-      fail-fast: false
       matrix:
-        # run copies of the current job in parallel
-        containers: [1, 2]
+        # the actual items in the array do not matter,
+        # just the number - to force CI to sping 3 copies
+        # of the current job in parallel
+        machines: [1, 2]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 
-      # - name: Download the build folders
-      #   uses: actions/download-artifact@v2
-      #   with:
-      #     name: build
-      #     path: build
-
-      - name: "UI Tests - Chrome"
-        uses: cypress-io/github-action@v2
+      # because of "record" and "parallel" parameters
+      # these machines will load balance all found tests among themselves
+      - name: Cypress run
+        uses: cypress-io/github-action@v1
         with:
-          # we have already installed all dependencies above
-          install: false
-          browser: chrome
           record: true
           parallel: true
-          group: "UI - Chrome"
+          group: "Actions example"
         env:
+          # pass the Dashboard record key as an environment variable
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
