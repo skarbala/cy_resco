@@ -1,0 +1,7 @@
+{
+    "experimentalFetchPolyfill": true,
+    "retries": {
+        "runMode": 1,
+        "openMode": 0
+    }
+}
